@@ -1,4 +1,5 @@
 import ExamControls from '@/components/admin/ExamControls';
+import ExportButtons from '@/components/admin/ExportButtons';
 import Link from 'next/link';
 
 export default function DashboardPage() {
@@ -8,6 +9,10 @@ export default function DashboardPage() {
 
       <div className="mb-8">
         <ExamControls />
+      </div>
+
+      <div className="mb-8">
+        <ExportButtons />
       </div>
 
       <nav className="grid grid-cols-3 gap-4">
