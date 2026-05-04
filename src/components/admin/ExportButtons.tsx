@@ -15,6 +15,12 @@ export default function ExportButtons() {
       >
         Export Winners
       </button>
+      <button
+        onClick={() => window.open('/api/export/teams-print', '_blank')}
+        className="px-4 py-2 text-white bg-purple-600 rounded hover:bg-purple-700"
+      >
+        Print Teams List
+      </button>
     </div>
   );
 }
