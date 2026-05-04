@@ -1,23 +1,41 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import LeaderboardPage from '../page';
 
 jest.mock('@/components/Leaderboard', () => {
   return function MockLeaderboard() {
-    return <div data-testid="leaderboard">Leaderboard Component</div>;
+    return <div>Leaderboard Component</div>;
   };
 });
 
-describe('Leaderboard Page', () => {
-  it('should render the Leaderboard component', () => {
-    render(<LeaderboardPage />);
+global.fetch = jest.fn();
 
-    expect(screen.getByTestId('leaderboard')).toBeInTheDocument();
+describe('LeaderboardPage', () => {
+  beforeEach(() => {
+    (global.fetch as jest.Mock).mockClear();
   });
 
-  it('should have a heading', () => {
+  it('should render leaderboard when showLeaderboard is true', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      json: jest.fn().mockResolvedValue({ showLeaderboard: true }),
+    });
+
     render(<LeaderboardPage />);
 
-    expect(screen.getByRole('heading', { name: /leaderboard/i })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Leaderboard')).toBeInTheDocument();
+    });
+  });
+
+  it('should not render leaderboard when showLeaderboard is false', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      json: jest.fn().mockResolvedValue({ showLeaderboard: false }),
+    });
+
+    render(<LeaderboardPage />);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Leaderboard')).not.toBeInTheDocument();
+    });
   });
 });

@@ -41,6 +41,8 @@ model ExamState {
   id        Int      @id
   isStarted Boolean  @default(false)
   isEnded   Boolean  @default(false)
+  showLeaderboard Boolean @default(false)
+  showTeams Boolean @default(false)
   updatedAt DateTime @default(now())
 }
 

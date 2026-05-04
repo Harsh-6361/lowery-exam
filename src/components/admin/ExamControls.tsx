@@ -3,7 +3,12 @@
 import { useState, useEffect } from 'react'
 
 export default function ExamControls() {
-  const [status, setStatus] = useState<{ isStarted: boolean; isEnded: boolean } | null>(null)
+  const [status, setStatus] = useState<{
+    isStarted: boolean;
+    isEnded: boolean;
+    showLeaderboard?: boolean;
+    showTeams?: boolean;
+  } | null>(null)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -23,6 +28,28 @@ export default function ExamControls() {
   const handleEnd = async () => {
     setLoading(true)
     const res = await fetch('/api/exam/end', { method: 'POST' })
+    const data = await res.json()
+    setStatus(data)
+    setLoading(false)
+  }
+
+  const handleToggleLeaderboard = async () => {
+    setLoading(true)
+    const res = await fetch('/api/exam/visibility', {
+      method: 'POST',
+      body: JSON.stringify({ showLeaderboard: !status?.showLeaderboard }),
+    })
+    const data = await res.json()
+    setStatus(data)
+    setLoading(false)
+  }
+
+  const handleToggleTeams = async () => {
+    setLoading(true)
+    const res = await fetch('/api/exam/visibility', {
+      method: 'POST',
+      body: JSON.stringify({ showTeams: !status?.showTeams }),
+    })
     const data = await res.json()
     setStatus(data)
     setLoading(false)
@@ -52,6 +79,20 @@ export default function ExamControls() {
           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:bg-gray-400"
         >
           End Exam
+        </button>
+        <button
+          onClick={handleToggleLeaderboard}
+          disabled={loading}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
+        >
+          {status.showLeaderboard ? 'Hide Leaderboard' : 'Show Leaderboard'}
+        </button>
+        <button
+          onClick={handleToggleTeams}
+          disabled={loading}
+          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400"
+        >
+          {status.showTeams ? 'Hide Teams' : 'Show Teams'}
         </button>
       </div>
     </div>

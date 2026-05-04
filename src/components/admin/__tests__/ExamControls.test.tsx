@@ -89,4 +89,54 @@ describe('ExamControls', () => {
       expect(global.fetch).toHaveBeenCalledWith('/api/exam/end', { method: 'POST' });
     });
   });
+
+  it('should display visibility toggle buttons when state is loaded', async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValueOnce({
+        isStarted: true,
+        isEnded: false,
+        showLeaderboard: false,
+        showTeams: false,
+      }),
+    });
+
+    render(<ExamControls />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Show Leaderboard')).toBeInTheDocument();
+      expect(screen.getByText('Show Teams')).toBeInTheDocument();
+    });
+  });
+
+  it('should call visibility API when toggle buttons are clicked', async () => {
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        json: jest.fn().mockResolvedValueOnce({
+          isStarted: true,
+          isEnded: false,
+          showLeaderboard: false,
+          showTeams: false,
+        }),
+      })
+      .mockResolvedValueOnce({
+        json: jest.fn().mockResolvedValueOnce({
+          showLeaderboard: true,
+        }),
+      });
+
+    render(<ExamControls />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Show Leaderboard')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText('Show Leaderboard'));
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/exam/visibility', {
+        method: 'POST',
+        body: JSON.stringify({ showLeaderboard: true }),
+      });
+    });
+  });
 });

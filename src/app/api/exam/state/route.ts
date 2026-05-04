@@ -9,6 +9,8 @@ export async function GET() {
   return NextResponse.json({
     isStarted: state?.isStarted || false,
     isEnded: state?.isEnded || false,
+    showLeaderboard: state?.showLeaderboard || false,
+    showTeams: state?.showTeams || false,
     questionCount,
     userCount,
   })
