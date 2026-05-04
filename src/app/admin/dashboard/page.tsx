@@ -10,12 +10,15 @@ export default function DashboardPage() {
         <ExamControls />
       </div>
 
-      <nav className="grid grid-cols-2 gap-4">
+      <nav className="grid grid-cols-3 gap-4">
         <Link href="/admin/dashboard/questions" className="p-4 border rounded-lg hover:bg-gray-50 text-center">
           Manage Questions
         </Link>
         <Link href="/admin/dashboard/problems" className="p-4 border rounded-lg hover:bg-gray-50 text-center">
           Manage Problem Statements
+        </Link>
+        <Link href="/admin/dashboard/teams" className="p-4 border rounded-lg hover:bg-gray-50 text-center">
+          Manage Teams
         </Link>
       </nav>
     </div>
