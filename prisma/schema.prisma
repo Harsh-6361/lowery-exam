@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String   @unique
+  branch        String
+  rollNumber    String   @unique
+  course        String
+  semesterYear  String
+  email         String   @unique
+  contactNumber String
+  createdAt     DateTime @default(now())
+  examAttempt   ExamAttempt?
+}
+
+model Question {
+  id                Int      @id @default(autoincrement())
+  questionText      String
+  options           String[]  @default([])
+  correctOptionIndex Int
+  createdAt         DateTime @default(now())
+}
+
+model ExamAttempt {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  answers    Json     // {questionId: selectedOptionIndex}
+  score      Int
+  submittedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model ExamState {
+  id        Int      @id
+  isStarted Boolean  @default(false)
+  isEnded   Boolean  @default(false)
+  updatedAt DateTime @default(now())
+}
+
+model ProblemStatement {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+}
+
+model Team {
+  id          Int      @id @default(autoincrement())
+  teamNumber  Int
+  members     Json     // [{name, branch, rank}]
+  isWinner    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
